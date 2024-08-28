@@ -3,8 +3,9 @@ import axios from 'axios';
 import './VotingPage.css';
 
 function VotingPage() {
-    const [catImage, setCatImage] = useState({});
-    const [loading, setLoading] = useState(false);
+    const [catImage, setCatImage] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [activeTab, setActiveTab] = useState('Voting');
 
     useEffect(() => {
         fetchCatImage();
@@ -27,11 +28,11 @@ function VotingPage() {
     };
 
     const handleFavorite = async () => {
-        if (!catImage || !catImage.id) return;
+        if (!catImage) return;
 
         try {
             await axios.post('http://localhost:8080/api/favorites', {
-                image_id: catImage.id,
+                image_id: catImage,
                 sub_id: 'user-123', // Replace with actual user ID if available
             });
         } catch (error) {
@@ -42,11 +43,11 @@ function VotingPage() {
     };
 
     const handleVote = async (value) => {
-        if (!catImage || !catImage.id) return;
+        if (!catImage) return;
 
         try {
             await axios.post('http://localhost:8080/api/votes', {
-                image_id: catImage.id,
+                image_id: catImage,
                 sub_id: 'user-123', // Replace with actual user ID if available
                 value: value,
             });
@@ -57,14 +58,19 @@ function VotingPage() {
         }
     };
 
-
     return (
         <div className="voting-page">
-            {loading ? (
-                <p>Loading...</p>
-            ) : (
-            <div className="image-container">
-                <img src={catImage} alt="Cat" className="cat-image" />
+            <div className="divider">
+                <div className="image-container">
+                    {loading ? (
+                        <div className="loading-screen">
+                            <img src="https://thecatapi.com/_app/immutable/assets/thecatapi-cat.74a07522.svg" alt="cat logo" className="loading_cat"/>
+                        </div>
+                    ) : (
+                        <img src={catImage} alt="Cat" className="cat-image" />
+                    )}
+                </div>
+
                 <div className="action-buttons">
                     <button onClick={handleFavorite} className="action-button favorite">
                         <svg
@@ -83,7 +89,6 @@ function VotingPage() {
                                 d="M48,12c-0.6,0-1,0.4-1,1s0.4,1,1,1c4.4,0,8,3.6,8,8c0,0.6,0.4,1,1,1s1-0.4,1-1C58,16.5,53.5,12,48,12z"
                             />
                         </svg>
-
                     </button>
                     <div className="vote-buttons">
                         <button onClick={() => handleVote(1)} className="action-button vote-up">
@@ -103,7 +108,6 @@ function VotingPage() {
                                     d="M7,54c-1.7,0-3,1.3-3,3,0,1.7,1.3,3,3,3s3-1.3,3-3C10,55.3,8.7,54,7,54z M7,58c-0.6,0-1-0.4-1-1,0-0.6,0.4-1,1-1s1,0.4,1,1C8,57.6,7.6,58,7,58z"
                                 />
                             </svg>
-
                         </button>
                         <button onClick={() => handleVote(-1)} className="action-button vote-down">
                             <svg
@@ -119,14 +123,10 @@ function VotingPage() {
                                     d="M7,38c-1.7,0-3-1.3-3-3,0-1.7,1.3-3,3-3s3,1.3,3,3C10,36.7,8.7,38,7,38z M7,34c-0.6,0-1,0.4-1,1,0,0.6,0.4,1,1,1s1-0.4,1-1C8,34.4,7.6,34,7,34z"
                                 />
                             </svg>
-
-
-
                         </button>
                     </div>
                 </div>
             </div>
-            )}
         </div>
     );
 }

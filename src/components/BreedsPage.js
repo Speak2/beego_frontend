@@ -7,6 +7,7 @@ function BreedsPage() {
   const [selectedBreed, setSelectedBreed] = useState(null);
   const [breedImages, setBreedImages] = useState([]);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchBreeds();
@@ -14,6 +15,7 @@ function BreedsPage() {
 
   useEffect(() => {
     if (selectedBreed) {
+      setLoading(true);
       fetchBreedImages(selectedBreed.id);
     }
   }, [selectedBreed]);
@@ -32,8 +34,10 @@ function BreedsPage() {
     try {
       const response = await axios.get('http://localhost:8080/api/breeds');
       setBreeds(response.data);
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching breeds:', error);
+      setLoading(false);
     }
   };
 
@@ -41,8 +45,10 @@ function BreedsPage() {
     try {
       const response = await axios.get(`http://localhost:8080/api/breed-images?breed_id=${breedId}`);
       setBreedImages(response.data);
+      setLoading(false);
     } catch (error) {
       console.error('Error fetching breed images:', error);
+      setLoading(false);
     }
   };
 
@@ -67,7 +73,11 @@ function BreedsPage() {
           ))}
         </select>
       </div>
-      {selectedBreed && (
+      {loading ? (
+        <div className="loading-screen">
+          <img src="https://thecatapi.com/_app/immutable/assets/thecatapi-cat.74a07522.svg" alt="cat logo" className="loading_cat"/>
+        </div>
+      ) : selectedBreed && (
         <div className="breed-info">
           <div className="breed-image-container">
             {breedImages.length > 0 && (
