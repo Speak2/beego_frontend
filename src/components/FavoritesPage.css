@@ -96,3 +96,20 @@ h1 {
 .favorites-container::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+.icon {
+  width: 24px;
+  height: 24px;
+  stroke: #000; /* Default stroke color */
+  transition: stroke 0.3s ease; /* Smooth transition for color changes */
+}
+
+.icon.stroke-primary {
+  stroke: black; /* Replace with your primary color */
+}
+
+/* Add more styles as needed */
+.icon:hover {
+  stroke: rgb(255 104 65);
+  transform: scale(1.2); /* Color change on hover */
+}

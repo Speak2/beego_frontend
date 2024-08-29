@@ -10,12 +10,12 @@ function BreedsPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    setLoading(true);
     fetchBreeds();
   }, []);
 
   useEffect(() => {
-    if (selectedBreed) {
-      setLoading(true);
+    if (selectedBreed) { 
       fetchBreedImages(selectedBreed.id);
     }
   }, [selectedBreed]);
@@ -25,7 +25,7 @@ function BreedsPage() {
       setCurrentImageIndex((prevIndex) => 
         (prevIndex + 1) % breedImages.length
       );
-    }, 5000);
+    }, 4000);
 
     return () => clearInterval(intervalId);
   }, [breedImages]);
@@ -34,6 +34,9 @@ function BreedsPage() {
     try {
       const response = await axios.get('http://localhost:8080/api/breeds');
       setBreeds(response.data);
+      if (response.data.length > 0) {
+        setSelectedBreed(response.data[0]); // Automatically select the first breed
+      }
       setLoading(false);
     } catch (error) {
       console.error('Error fetching breeds:', error);
@@ -52,10 +55,11 @@ function BreedsPage() {
     }
   };
 
-  const handleBreedChange = (event) => {
+  const handleBreedChange = (event) => { 
     const breed = breeds.find(b => b.id === event.target.value);
     setSelectedBreed(breed);
-    setCurrentImageIndex(0);
+    setCurrentImageIndex(0); 
+    setLoading(true)
   };
 
   return (
